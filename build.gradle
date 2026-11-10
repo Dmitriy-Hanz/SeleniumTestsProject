@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group 'StpGroup'
+version '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.10.2'
+    seleniumVersion = '4.31.0'
+    restAssuredVersion = '5.4.0'
+    webdrivermanagerVersion = '5.8.0'
+    snakeyamlVersion = '2.2'
+}
+
+dependencies {
+    // Spring Boot
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-test"
+    implementation "org.springframework.boot:spring-boot-starter-json"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    //нужен для того чтобы конфиг в расширении yaml работал
+    implementation "org.yaml:snakeyaml:$snakeyamlVersion"
+
+    // Selenium
+    implementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+    implementation "io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion"
+
+    //JUnit
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    implementation "io.rest-assured:rest-assured:$restAssuredVersion"
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+
+    // Awaitility
+    testImplementation 'org.awaitility:awaitility:4.3.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    ignoreFailures = true
+}
+
+tasks.withType(Test) {
+    systemProperty 'file.encoding', 'UTF-8'
+    testLogging {
+        showStandardStreams = true
+    }
+}
